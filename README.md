@@ -56,7 +56,23 @@ Our main code is located in the file "/gls/compute_gls.cpp".
         The second parameter is the descriptor file of object B (in our case target_bunny).
         The third parameter is the output filename where the algorithm will write the estimated transform. 
         
-        NB : 
+        NB 1 : The 4th application contains other parameters directly set inside the function. 
+             The user is asked to change them if he wants. 
+             "nb_iterations" : the number of iterations for the RANSAC algorithm
+             "max_err_scale" : the maximal scale error authorized for a set of k pairs of matching points. Each pair of points comes with it related scale. So scale can not be coherent for all the matching points. This threshold enables to keep a set of matching points with similar scale. 
+             "max_err_reg" : parameter of RANSAC algorithm. At iteration k, the computed transformed is applied only if the registration error is below this threshold. 
+             "max_err_norm" : parameter of RANSAC algorithm. In order to find a transform, RANSAC algorithm needs at least 3 matching pairs (minimum number of pairs).
+             The threshold "max_error_norm" makes sure that at iteration k, the normals of the 3 points in object A are similar to the normal of their 3 corresponding in object B. If so, the transform is applied; otherwise it isn't. 
+             "bbox_diag_ratio" : the ratio of the diagonal of the bounding box of object A (source object) over the diagonal of object B (target object)
+             "bbox_diag" : diagonal of the bounding box of object A (source object)
+             
+         NB 2 :  The 4th application contains a debug mode that the user can comment. This debug mode consists in writing intermediate results in text files.
+         The debug mode regards : 
+            - the filename "kpairs_filename" (line 422 to 427) associated to the function "write_kpairs" (line 435). "write_kpairs" produces a k-lines and 8 columns file containing, for each row : a new matching pair, for the 3 first columns : the 3D coordinates of the target point , for the 3 following columns : the 3D coordinates of the matching source point, for the 7th column, the estimated scale for the pair of points, and for the 8th column an indication of good (1) or bad (0) correspondance based on the correlation value. 
+              
+         
+             
+
       
       
      
