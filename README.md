@@ -64,11 +64,29 @@ Our main code is located in the file "/gls/compute_gls.cpp".
              "max_err_norm" : parameter of RANSAC algorithm. In order to find a transform, RANSAC algorithm needs at least 3 matching pairs (minimum number of pairs).
              The threshold "max_error_norm" makes sure that at iteration k, the normals of the 3 points in object A are similar to the normal of their 3 corresponding in object B. If so, the transform is applied; otherwise it isn't. 
              "bbox_diag_ratio" : the ratio of the diagonal of the bounding box of object A (source object) over the diagonal of object B (target object)
-             "bbox_diag" : diagonal of the bounding box of object A (source object)
+             "bbox_diag" : diagonal of the bounding box of object B (target object)
              
          NB 2 :  The 4th application contains a debug mode that the user can comment. This debug mode consists in writing intermediate results in text files.
          The debug mode regards : 
             - the filename "kpairs_filename" (line 422 to 427) associated to the function "write_kpairs" (line 435). "write_kpairs" produces a k-lines and 8 columns file containing, for each row : a new matching pair, for the 3 first columns : the 3D coordinates of the target point , for the 3 following columns : the 3D coordinates of the matching source point, for the 7th column, the estimated scale for the pair of points, and for the 8th column an indication of good (1) or bad (0) correspondance based on the correlation value. 
+            - the filename "debug_file" (line 437-440) used in the function "write_ply_file_for_debug" (see file "ransac_scheme.cpp" line 835 and file "IO" line 516-562. This function enables to visualize by color in one of the point cloud (A or B) the set of points that have been seleted as half-pair to compute the RANSAC algorithm (in green color). If one of the point belongs to the pair with highest priority, then this point is colored in red. Otherwise, the rest of the points are in black. 
+            - the filename "filename_transform" (line 452 to 459) and used in the function "write_matrix_transform" (line 459) enables to save the iterative results of the transform for different values of lambda, in order to see which lambda value in the metric gives the better results for RANSAC. The parameter lambda comes in a metric for pair selection for RANSAC algorithm. The metric is used to chose k pairs of corresponding points for the RANSAC algorithm, based on both the geometric variation and the distance between the selected points in target point cloud. For a given target point p belonging to 1 out of K corresponding pairs, the metric is the following:  _sum_K(sqrt(distL2(p, q_k) / bbox_diag) + lambda*((max_cost_ - diss_cost(p)*diss_cost(q_k))/(max_cost_ - min_cost_))_. 
+            
+            With :  - sum_k : the sum over the K considered matching pairs
+                    - q_k : the target point of the kth pair (k goes from 1 to K)
+                    - bbox_diag : diagonal of the bounding box for the target point cloud
+                    - lambda : parameter to evaluate in the debug mode (nevertheless, the user can set it and remove the debug mode)
+                    - diss_cost(p) : dissimilarity cost (based on the geometric variation) of the pair (p, p'). With p' the correponding point of p in the source point cloud. 
+                    - diss_cost(q_k) : dissimilarity cost (based on the geometric variation) of the pair (q_k, q_k'). With q_k' the correponding point of q_k in the  source point cloud. 
+                    - max_cost and min_cost : the maximum and minimum dissimilarity cost for all the pairs of matching points. 
+
+         For simplicity, the user can commment the code lines used for debug. Otherwise, he will have to replace our paths and filnemanes for debug files by its own. 
+         
+        
+        NB 3 : In the 4th application, we used the function "pop_k_farthest_pairs" (in "ransac_scheme.cpp") to compute the k pairs of mathing points to give to the RANSAC algorithm. This function is based on the lamdab-metric using both the distance and the geometric variation and described just above. If the user doesn't want to use a simpler metric, he can call "pop_triplet" or "pop_3_farthest_pairs" in replace of "popk_farthest_pairs" in the function "ransac_algorithm". "pop_triplet" will pop a triplet of pairs of matching point according to their ascending dissimilarity cost (i.e. the pair with the smallest dissimilarity cost will be poped first, and so on). "pop_3_farthest_pairs" will first pop the pair of points (p, p') that have the smallest dissimilarity cost (i.e. the one in the top of the priority queue). Then, two other pairs of points (q, q') and (r, r') will complete it by maximizing the distance |p - q| + |p - r| + |q - r| (with p, q and r belonging to the target point cloud). There is an other mode to "pop_3_farthest_pairs" where the 3 pairs of points will be selected according to both the dissimilarity cost (computed with geometric variation) and the distance to each other. This mode needs the user to set a lambda parameter. 
+                   
+            
+
               
          
              
