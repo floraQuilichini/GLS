@@ -12,7 +12,7 @@ Our main code is located in the file "/gls/compute_gls.cpp".
 4 applications can be generated with our GLS code : 
    - 1st application : computing GLS descriptors. 
      Uncomment from line 138 to line 254 and Comment from line 256 to end
-     Then, to test the code, use the data contained in the folder "data_example_1" and run the following command in a terminal: 
+     Then, to test the code, use the data contained in the folder "data_example_1" with the following arguments: 
      bunny.ply  bunny_source_interest_point.ply  0.1292 4.9115 500 bunny_profiles.txt 1 
      The first parameter is the original mesh/point cloud
      The second parameter is a subset of keypoints from the original point cloud. GLS will be computed on these keypoints. 
@@ -28,7 +28,7 @@ Our main code is located in the file "/gls/compute_gls.cpp".
       This application is the continuity of the first one. To make it works, the user must first compute the descriptors on the two objects A and B he wants to register. 
       So, he ill have to run 1rst application on object A, 1rst application on object B, and then use both the generated descriptor files in application 2. 
       The folder "data_example_2" contains the results that one would obtained if he ran application 1 on both source and target meshes contained "data_example_1"
-      To test the code, use the data contained in the folder "data_example_2" and run the following command in a terminal: 
+      To test the code, use the data contained in the folder "data_example_2" with the following arguments : 
       bunny_vsa_complete_profiles.txt  bunny_downsampled_vsa_complete_profiles.txt  bunny_vsa_bunny_downsampled_vsa_matching.txt 1
       The first parameter is the descriptor file of object A (in our case source_bunny). 
       The second parameter is the descriptor file of object B (in our case target_bunny).
@@ -39,7 +39,7 @@ Our main code is located in the file "/gls/compute_gls.cpp".
         Comment from line 138 to 331 and from line 372 to the end. Uncomment from line 334 to line 369. 
         This third application is an alternative to the second application, in the case where the 2 objects share the same scale (or have been rescaled upstream). 
         Then, this application computes the matching pairs from the generated descriptor files of the two same-scale objects. The folder "data_example_3" contains two subfolders. The subfolder "meshes" contains source and target meshes at the same scale that the user can use to generate profiles files with application 1. The subfolder "profiles" contains the file profiles generated with the data from "meshes". 
-        To test the code, use the data contained in the folder "data_example_3/profiles" and run the following command in a terminal:
+        To test the code, use the data contained in the folder "data_example_3/profiles" with the following arguments:
         profiles\bunny_vsa_complete_profiles.txt  profiles\bunny_downsampled_vsa_complete_profiles.txt bunny_vsa_bunny_downsampled_vsa_rescaled_matching.txt
         The first parameter is the descriptor file of object A (in our case source_bunny).
         The second parameter is the descriptor file of object B (in our case target_bunny).
@@ -50,7 +50,7 @@ Our main code is located in the file "/gls/compute_gls.cpp".
         This application takes the profiles files (computed in app 1 - with geometric variations -) of objects A and B  in order to estimate the matching points. Then, this subset of matching point is given to the RANSAC algorithm that will output the transform T between the two objects to register. 
         From 2 objects to register, the following steps to get to the estimated transform are : run app 1 (with geometric variation) and run app 4. 
         The folder "data_example_4" contains the matching points files obtained from app 1 with data from "data_example_1"
-        To test the code, use the data contained in the folder "data_example_4" and run the following command in a terminal:
+        To test the code, use the data contained in the folder "data_example_4" with the following arguments:
         bunny_vsa_1000_profiles_and_geom_var.txt  bunny_downsampled_vsa_1000_profiles_and_geom_var.txt transform.txt
         The first parameter is the descriptor file of object A (in our case source_bunny).
         The second parameter is the descriptor file of object B (in our case target_bunny).
